@@ -10,6 +10,8 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+app.use(express.json())
+
 app.get('/', (req, res) => {
     res.send('Application running successfully !')
   })
