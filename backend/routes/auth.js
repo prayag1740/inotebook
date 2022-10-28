@@ -4,7 +4,7 @@ const {userValidationRules, validate } = require('../validator.js')
 
 const router = express.Router();
 
-//CREATE USER (POST)
+//CREATE USER (POST) /api/auth/ (Without login)
 router.post("/", userValidationRules(), validate,  (req, res) => {
     const user = User(req.body);
 
