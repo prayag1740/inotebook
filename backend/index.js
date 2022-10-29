@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config();
 const connectToMongo = require('./db') ;
 
 connectToMongo() ;
@@ -11,6 +12,10 @@ app.listen(port, () => {
 })
 
 app.use(express.json())
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 app.get('/', (req, res) => {
     res.send('Application running successfully !')

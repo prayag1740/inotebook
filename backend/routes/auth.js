@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User')
 const {userValidationRules, validate } = require('../validator.js')
 const bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken')
 
 const router = express.Router();
 
@@ -14,7 +15,12 @@ router.post("/createuser", userValidationRules(), validate,
     req.body.password = secPass
     const user = User(req.body);
 
-    user.save().then(user => res.json(user)).catch(function(err) {
+    data = {"user" : {"id" : user.id}}
+    const jwtData = jwt.sign(data, process.env.JWT_SECRET)
+    
+    let resp = {"authToken" : jwtData}
+
+    user.save().then(() => res.json(resp)).catch(function(err) {
         if (err) {
            return res.send({error : 'Email Already exists. Please try with a new email'});
         }
