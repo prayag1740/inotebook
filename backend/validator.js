@@ -18,7 +18,7 @@ const loginUserValidationRules = () => {
 const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
-        return next()
+        return next() //calls next function
     }
 
     const extractedErrors = []

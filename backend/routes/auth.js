@@ -2,7 +2,8 @@ const express = require('express');
 const User = require('../models/User')
 const {userValidationRules, validate, loginUserValidationRules } = require('../validator.js')
 const bcrypt = require('bcryptjs');
-var jwt = require('jsonwebtoken')
+var jwt = require('jsonwebtoken');
+const fetchUser = require('../middleware/fetchUser');
 
 const router = express.Router();
 
@@ -57,5 +58,18 @@ router.post("/login", loginUserValidationRules(), validate,
         }
 )
 
+
+//Get user details by Login 
+router.post("/getUser", fetchUser, async (req, res) => {
+    try {
+        const userBody = req.user ;
+        const userId = userBody.id ;
+        const user = await User.findById(userId).select('-password')
+        res.json({user})        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({"error" : "Some error occured"})
+    }
+})
 
 module.exports = router ;
