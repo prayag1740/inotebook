@@ -1,6 +1,6 @@
 const express = require('express');
 const User = require('../models/User')
-const {userValidationRules, validate } = require('../validator.js')
+const {userValidationRules, validate, loginUserValidationRules } = require('../validator.js')
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken')
 
@@ -26,5 +26,36 @@ router.post("/createuser", userValidationRules(), validate,
         }
     })
 })
+
+
+//Login (POST) /api/auth/login 
+router.post("/login", loginUserValidationRules(), validate, 
+    async (req, res) => {
+        let {email, password} = req.body;
+        try {
+            let u = await User.findOne({"email" : email}) ;
+            if (!u) {
+                return res.status(400).json({error : 'Please try to login with correct credentials'});
+            }
+            const passwordCompare = await bcrypt.compare(password, u.password) ;
+
+            if (! passwordCompare) {
+                return res.status(400).json({error : 'Please try to login with correct credentials'});
+            }
+
+            let payload = {
+                "user" : {
+                    "id" : u.id
+                }
+            }
+            const authToken = jwt.sign(payload, process.env.JWT_SECRET)
+            res.json({authToken})
+        } catch(error) {
+            console.error(error.message);
+            res.status(500).send({"error" : "Some error occured"})
+        }
+        }
+)
+
 
 module.exports = router ;
