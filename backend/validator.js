@@ -15,6 +15,13 @@ const loginUserValidationRules = () => {
     ]
 }
 
+const createUserNote = () => {
+    return [
+        body('title', 'Title should be minimum 3 characters').isLength({min : 3}),
+        body('description', 'Description should be atleast 5 characters').isLength({min : 5}),
+    ]
+}
+
 const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -30,5 +37,6 @@ const validate = (req, res, next) => {
 module.exports = {
     userValidationRules,
     loginUserValidationRules,
+    createUserNote,
     validate
 }
