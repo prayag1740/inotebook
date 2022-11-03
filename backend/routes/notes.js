@@ -51,5 +51,20 @@ router.put("/update/:id", fetchUser,
 
 });
 
+//DELETE (api/notes/delete) --updates a note for the user
+router.delete("/delete/:id", fetchUser,
+ async (req, res) => {
+
+    let note = await Notes.findById(req.params.id);
+    if (!note) {return res.status(404).send({'error' : 'Note not found'})}
+
+    if (note.user.toString() !== req.user.id) {
+        return res.status(401).send({'error' : 'Not Allowed'})
+    }
+
+    note = await Notes.findByIdAndDelete(req.params.id) ;
+    res.json({"Success" : "Note has been deleted"}) ;
+});
+
 
 module.exports = router;
