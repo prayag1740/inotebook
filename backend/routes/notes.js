@@ -1,6 +1,7 @@
 const express = require("express");
 const fetchUser = require("../middleware/fetchUser");
-const {body, validationResult } = require('express-validator')
+const {createUserNote, validate} = require('../validator.js')
+
 
 const Notes = require("../models/Notes");
 
@@ -13,19 +14,10 @@ router.get("/fetchnotes", fetchUser, async (req, res) => {
 });
 
 //POST (api/notes/add) --create a new note for user
-router.post("/add", fetchUser, [
-    body('title', 'Title should be minimum 3 characters').isLength({min : 3}),
-    body('description', 'Description should be atleast 5 characters').isLength({min : 5}),
-], async (req, res) => {
+router.post("/add", createUserNote(), validate, fetchUser,
+ async (req, res) => {
   try {
-    console.log("user adds note")
     let { title, description, tag } = req.body;
-
-    const errors = validationResult(req) ;
-    if (!errors.isEmpty()) {
-        return res.status(400).send({errors : errors.array()});
-    }
-
     const note = new Notes({ title, description, tag, user: req.user.id });
     const savedNote = await note.save();
     res.json(savedNote);
@@ -34,5 +26,30 @@ router.post("/add", fetchUser, [
     res.status(500).send({ error: "Some error occured" });
   }
 });
+
+
+//PUT (api/notes/update) --updates a note for the user
+router.put("/update/:id", fetchUser,
+ async (req, res) => {
+
+    const {title, description, tag} = req.body
+  
+    let note = await Notes.findById(req.params.id);
+    if (!note) {return res.status(404).send({'error' : 'Note not found'})}
+
+    if (note.user.toString() !== req.user.id) {
+        return res.status(401).send({'error' : 'Not Allowed'})
+    }
+
+    const newNote = {};
+    if (title) {newNote.title = title} ;
+    if (description) {newNote.description = description} ;
+    if (tag) {newNote.tag = tag} ;
+
+    note = await Notes.findByIdAndUpdate(req.params.id, {$set : newNote}, {new:true})
+    res.json({note}) ;
+
+});
+
 
 module.exports = router;
