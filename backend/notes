@@ -13,3 +13,7 @@ Async and await in JavaScript
 1) async makes a function that returns a promise
  await makes a function wait for the promise
 
+
+To run both client and server application
+--  npm run both
+
