@@ -8,8 +8,10 @@ import {
 } from "react-router-dom";
 
 import About from './components/About'
-import Home from './components/Home'
+
+
 import NoteState from './context/notes/noteState';
+import Home from './components/Home';
 
 function App() {
   return (
