@@ -4,7 +4,7 @@ import NoteContext from "../context/notes/noteContext";
 export default function NoteItem(props) {
 
   const context = useContext(NoteContext);
-  const { deleteNote } = context;
+  const { deleteNote, editNote } = context;
 
   const { note } = props;
 
