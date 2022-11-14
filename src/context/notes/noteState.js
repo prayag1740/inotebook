@@ -40,21 +40,46 @@ const NoteState = (props) => {
         body: JSON.stringify(data) 
       });
 
+      const responseStatus = response.status
       const newNoteJson = await response.json();
+
+      if (responseStatus !== 200) {
+        console.log(`Error occured while adding note with status code ${responseStatus} & err_msg => ${newNoteJson.error}`)
+        return
+      }
 
       //client side note addition
       setNotes(notes.concat(newNoteJson))
     }
 
     //delete a note
-    const deleteNote = (id) => {
+    const deleteNote = async (id) => {
+
+      let url = host + '/api/notes/delete/' + id
+
+      const response = await fetch(url, {
+        method: 'DELETE', 
+        headers: {
+          'Content-Type': 'application/json',
+          'auth_token' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjM2MGM1OWU2NGJlMTQ1YWU2NTkxYzlmIn0sImlhdCI6MTY2NzI4NjQ1Mn0.loOIJ_i2kr6LQZANwjG3WgjWDN2NJYuVwsLzZ0kAa_U'
+        }, 
+      });
+      
+      const responseStatus = response.status
+      const jsonResponse = await response.json();
+      
+      if (responseStatus !== 200) {
+        console.log(`Error occured while deleting note with status code ${responseStatus} & err_msg => ${jsonResponse.error}`)
+        return
+      }
+  
       console.log("Deleting the note with " + id)
       let newNotes = notes.filter((note) => {return note._id !== id})
       setNotes(newNotes)
     }
 
     //edit a note
-    const editNote = async (id, description, title, tag) => {
+    const editNote = async (id, title,description, tag) => {
       console.log("Editing the note with " + id)
 
       //api call
@@ -70,17 +95,20 @@ const NoteState = (props) => {
       });
 
       const json = await response.json();
+      let newNotes = JSON.parse(JSON.stringify(notes)) ;
 
       //client side update
-      for (let index = 0; index < notes.length; index++) {
+      for (let index = 0; index < newNotes.length; index++) {
         let element = notes[index]
         if (element._id === id) {
-          element.description = description ;
-          element.title = title ;
-          element.tag = tag ;
+          newNotes[index].description = description ;
+          newNotes[index].title = title ;
+          newNotes[index].tag = tag ;
+          break ;
         }
-        
       }
+      setNotes(newNotes) ;
+
     }
 
     return (

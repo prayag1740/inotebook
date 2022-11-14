@@ -17,3 +17,21 @@ Async and await in JavaScript
 To run both client and server application
 --  npm run both
 
+
+useEffect hook in react
+ -- runs the function after the component is loaded (on update & mounted first time)
+ -- 2nd argument defines when will the first function run
+ -- for ex if we have a state xyz and we pass state xyz as 2nd parameter, the page will be rendered only when state xyz changes 
+ -- if we pass an empty array, if will run only the first time (ie only on mount)
+-- if we want to unsubscribe to an component, we will have to call a return function
+
+YT video -- https://www.youtube.com/watch?v=0ZJgIjIuY7U
+
+
+useRef hook in react
+-- when a component with a ref tag gets rendered
+-- does not cause the element to be re rendered when state is updated
+
+YT video -- https://www.youtube.com/watch?v=t2ypzz6gJm0
+
+** Whenever there is a state update, it will cause the re render of the DOM elements
