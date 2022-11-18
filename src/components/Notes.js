@@ -4,7 +4,7 @@ import NoteItem from "../components/NoteItem";
 import AddNote from "./AddNote";
 import { useRef } from "react";
 
-export default function Notes() {
+export default function Notes(props) {
   const context = useContext(NoteContext);
   const {notes, getAllNotes, editNote} = context;
   const [note, SetNote] = useState({'etitle' : '', 'edescription' : '' , 'etag' : 'default' , 'id' : ''})
@@ -22,6 +22,7 @@ export default function Notes() {
   const handleClick = (e) => {
     editNote(note.id, note.etitle, note.edescription, note.etag) ;
     refClose.current.click() ;
+    props.showAlert("Updated Note", "success")
   }
 
   const onChange = (e) => {
@@ -70,7 +71,7 @@ export default function Notes() {
       {notes.length === 0 && 'No notes to display'}
       </div>
       {notes.map((note) => {
-        return <NoteItem note={note} updateNote={updateNote} key={note._id} />;
+        return <NoteItem note={note} updateNote={updateNote} showAlert={props.showAlert} key={note._id} />;
       })}
     </div>
     </>

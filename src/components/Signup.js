@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-function Signup() {
+function Signup(props) {
 
   const [credentials, SetCredentials] = useState({'email' : '', 'password' : '', 'name' : '', 'cpassword' : ''})
   let history = useNavigate() ;
@@ -9,7 +9,7 @@ function Signup() {
   const handleSubmit = async (e) => { 
 
     if (credentials.password !== credentials.cpassword) {
-      alert("Password do not match") ;
+      props.showAlert("Password do not match", "danger")
       return ;
     }
 
@@ -28,9 +28,10 @@ function Signup() {
     if (response.status === 200) {
       localStorage.setItem('token', json.authToken)
       history("/");
+      props.showAlert("Account created successfully", "success")
 
     } else {
-      alert("Invalid Credentials || Please try again")
+      props.showAlert("Invalid Credentials || Please try again", "danger")
     }
   }
 
