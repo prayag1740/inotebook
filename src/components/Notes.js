@@ -1,6 +1,7 @@
 import NoteContext from "../context/notes/noteContext";
 import React, { useContext, useEffect, useState } from "react";
 import NoteItem from "../components/NoteItem";
+import { useNavigate } from "react-router-dom";
 import AddNote from "./AddNote";
 import { useRef } from "react";
 
@@ -10,9 +11,16 @@ export default function Notes(props) {
   const [note, SetNote] = useState({'etitle' : '', 'edescription' : '' , 'etag' : 'default' , 'id' : ''})
   const ref = useRef(null);
   const refClose = useRef(null);
+  let history = useNavigate() ;
 
   useEffect(() => {
-    getAllNotes()}, []) //for fetching the notes once
+    if (localStorage.getItem('token')) {
+      getAllNotes() ;
+    }
+    else {
+      history("/login");
+    }
+    }, []) //for fetching the notes once
 
   const updateNote = (currNote) => {
     ref.current.click();
