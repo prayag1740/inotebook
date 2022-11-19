@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 
-export default function Navbar() {
+export default function Navbar(props) {
 
   let location = useLocation();
   let history = useNavigate() ;
@@ -14,7 +14,6 @@ export default function Navbar() {
     localStorage.removeItem('token');
     history("/login");
   }
- 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
   <div className="container-fluid">
@@ -35,7 +34,10 @@ export default function Navbar() {
         <form className="d-flex" role="search">
         <Link className="btn btn-primary mx-2" to="/login" role="button">Login</Link>
         <Link className="btn btn-primary mx-2" to="/signup" role="button">Signup</Link>  
-      </form> : <Link className="btn btn-primary mx-2" to="/login" role="button" onClick={handleLogout}>Logout</Link>
+      </form> :  <form className="d-flex" role="search">
+      <Link className="btn btn-primary mx-2" to="/login" role="button" onClick={handleLogout}>Logout</Link>
+      <Link className="btn btn-primary mx-2" to="/profile" role="button">Profile</Link>  
+        </form>
       }
       
     </div>
